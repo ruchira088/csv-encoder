@@ -1,0 +1,7 @@
+FROM openjdk:11-jre-slim
+
+WORKDIR /opt/csv-encoder
+
+ADD target/universal/csv-encoder-*.tgz .
+
+CMD [ "/opt/csv-encoder/bin/csv-encoder" ]
