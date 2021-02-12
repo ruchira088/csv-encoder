@@ -6,16 +6,16 @@ import org.scalatest.matchers.must.Matchers
 
 class CsvEncoderTest extends AnyFlatSpec with Matchers {
 
-  val simpleOne: SimpleClass = SimpleClass("John", Some(22), isAdult = true)
-  val simpleTwo: SimpleClass = SimpleClass("Smith", None, isAdult = false)
+  val SimpleOne: SimpleClass = SimpleClass("John", Some(22), isAdult = true)
+  val SimpleTwo: SimpleClass = SimpleClass("Smith", None, isAdult = false)
 
   "Encoding values" should "encode simple case class" in {
     val csvEncoder = CsvEncoder[SimpleClass]
 
     csvEncoder.fields mustBe Seq("name", "age", "isAdult")
 
-    csvEncoder.encode(simpleOne) mustBe Seq("John", "22", "true")
-    csvEncoder.encode(simpleTwo) mustBe Seq("Smith", "", "false")
+    csvEncoder.encode(SimpleOne) mustBe Seq("John", "22", "true")
+    csvEncoder.encode(SimpleTwo) mustBe Seq("Smith", "", "false")
   }
 
   it should "encode a nested case class" in {
@@ -31,13 +31,12 @@ class CsvEncoderTest extends AnyFlatSpec with Matchers {
       "value"
     )
 
-    val nestedOne = NestedCaseClass(simpleOne, Some(simpleTwo), Some("1,2,3"))
-    val nestedTwo = NestedCaseClass(simpleOne, None, None)
+    val nestedOne = NestedCaseClass(SimpleOne, Some(SimpleTwo), Some("1,2,3"))
+    val nestedTwo = NestedCaseClass(SimpleOne, None, None)
 
     csvEncoder.encode(nestedOne) mustBe Seq("John", "22", "true", "Smith", "", "false", "1,2,3")
     csvEncoder.encode(nestedTwo) mustBe Seq("John", "22", "true", "", "", "", "")
   }
-
 }
 
 object CsvEncoderTest {

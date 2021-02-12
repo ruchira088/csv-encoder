@@ -10,8 +10,12 @@ trait CsvEncoder[-A] {
 }
 
 object CsvEncoder {
-
   def apply[A](implicit csvEncoder: CsvEncoder[A]): CsvEncoder[A] = csvEncoder
+
+  implicit class CsvEncoderOps[A](value: A) {
+    def toCsv(implicit csvEncoder: CsvEncoder[A]): Seq[(String, String)] =
+      csvEncoder.fields.zip(csvEncoder.encode(value))
+  }
 
   implicit def genericCsvEncoder[A, Repr <: HList](
     implicit labelledGeneric: LabelledGeneric.Aux[A, Repr],
@@ -61,5 +65,4 @@ object CsvEncoder {
 
       override val fields: Seq[String] = csvEncoder.fields
     }
-
 }
